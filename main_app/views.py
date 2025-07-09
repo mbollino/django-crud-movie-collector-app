@@ -1,26 +1,17 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-
-class Movie:
-    def __init__(self, title, director, genre, year):
-        self.title = title
-        self.director = director
-        self.genre = genre
-        self.year = year
-
-movies = [
-    Movie("Inception", "Christopher Nolan", "Sci-Fi", 2010),
-    Movie("The Godfather", "Francis Ford Coppola", "Crime", 1972),
-    Movie("Pulp Fiction", "Quentin Tarantino", "Crime", 1994),
-    Movie("The Dark Knight", "Christopher Nolan", "Action", 2008),
-]
+from .models import Movie
 
 # Create your views here.
 def home(request):
-    return HttpResponse('<h1>Hello!</h1>')
+    return render(request, 'home.html')
 
 def about(request):
     return render(request, 'about.html')
 
 def movie_index(request):
+    movies = Movie.objects.all()
     return render(request, 'movies/index.html', {'movies': movies})
+
+def movie_detail(request, movie_id):
+    movie = Movie.objects.get(id=movie_id)
+    return render(request, 'movies/detail.html', { 'movie': movie })

@@ -3,7 +3,7 @@
 {% endblock %} {% block content %}
 
 <section class="page-header">
-  <h1>Movie List</h1> 
+  <h1>Movie List</h1>
   <img src="{% static 'images/filmstrip1.jpg' %}" alt="Filmstrip One" />
   <img src="{% static 'images/filmstrip2.jpg' %}" alt="Filmstrip Two" />
   <img src="{% static 'images/filmstrip3.jpg' %}" alt="Filmstrip Three" />
@@ -13,13 +13,19 @@
 <section class="card-container">
   {% for movie in movies %}
   <div class="card">
-    <div class="card-content">
-      <div class="card-img-container">
-        <img class='usr-img' src="{% static 'images/movie-popcorn.jpg' %}" alt="Movie Popcorn" />
+    <a href="{% url 'movie_detail' movie.id %}">
+      <div class="card-content">
+        <div class="card-img-container">
+          <img
+            class="usr-img"
+            src="{% static 'images/movie-popcorn.jpg' %}"
+            alt="Movie Popcorn"
+          />
+        </div>
+        <h2 class="card-title">{{ movie.title }}</h2>
+        <p>A {{ movie.genre }} movie released {{ movie.release_year }}</p>
       </div>
-      <h2 class="card-title">{{ movie.name }}</h2>
-      <p>A {{ movie.genre }} movie released {{ movie.year }}</p>
-    </div>
+    </a>
   </div>
   {% endfor %}
 </section>
