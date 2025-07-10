@@ -12,7 +12,12 @@
     <h1>{{ movie.title }}</h1>
     <h2>A {{ movie.genre }} released in {{ movie.release_year }} that was directed by {{ movie.director }} </h2>
     <p>Rating: {{ movie.rating }}</p>
-    <p>{{ movie.description }}</p>   
+    <p>{{ movie.description }}</p>
+    
+    <div class="movie-actions">
+        <a href="{% url 'movie_update' movie.id %}" class="btn warn">Edit</a>
+        <a href="{% url 'movie_delete' movie.id %}" class="btn danger">Delete</a>>
+    </div>
   </div>
 </section>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 class Movie(models.Model):
@@ -11,3 +12,6 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse('movie_detail', kwargs={'movie_id': self.id})
