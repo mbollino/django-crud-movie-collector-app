@@ -1,22 +1,22 @@
-{% extends 'base.html' %} 
-{% load static %} 
-{% block head %}
+{% extends 'base.html' %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'css/movies/movie_detail.css' %}" />
-{% endblock %} 
-{% block content %}
+{% endblock %} {% block content %}
 <section class="movie-container">
   <div class="movie-img">
     <img src="{% static 'images/movie-popcorn.jpg' %}" alt="Movie popcorn" />
   </div>
   <div class="movie-details">
     <h1>{{ movie.title }}</h1>
-    <h2>A {{ movie.genre }} released in {{ movie.release_year }} that was directed by {{ movie.director }} </h2>
+    <h2>
+      {{ movie.genre }} movie released in {{ movie.release_year }} that was
+      directed by {{ movie.director }}
+    </h2>
     <p>Rating: {{ movie.rating }}</p>
     <p>{{ movie.description }}</p>
-    
+
     <div class="movie-actions">
-        <a href="{% url 'movie_update' movie.id %}" class="btn warn">Edit</a>
-        <a href="{% url 'movie_delete' movie.id %}" class="btn danger">Delete</a>>
+      <a href="{% url 'movie_update' movie.id %}" class="btn warn">Edit</a>
+      <a href="{% url 'movie_delete' movie.id %}" class="btn danger">Delete</a>
     </div>
   </div>
 </section>
@@ -25,16 +25,28 @@
   <section class="viewings">
     <div class="subsection-title">
       <h2>Viewings</h2>
+      <img src="{% static 'images/filmaward.jpg' %}" alt="A film award" />
       <img
-        src="{% static 'images/filmaward.jpg' %}"
-        alt="A film award"
+        src="{% static 'images/spilledpopcorn.jpg' %}"
+        alt="Spilled popcorn"
       />
-      <img src="{% static 'images/spilledpopcorn.jpg' %}" alt="Spilled popcorn" />
       <img
         src="{% static 'images/movie-theater.jpg' %}"
         alt="Movie theater room"
       />
     </div>
+    <h3>Add a Viewing</h3>
+    <form
+      action="{% url 'add_viewing' movie.id %}"
+      method="post"
+      class="subsection-content"
+      autocomplete="off"
+    >
+      {% csrf_token %} {{ viewing_form.as_p }}
+      <button type="submit" class="btn submit">Add Viewing</button>
+    </form>
+    <h3>Past Viewings</h3>
+    {% if movie.viewings.all.count %}
     <table>
       <thead>
         <tr>
@@ -43,16 +55,81 @@
         </tr>
       </thead>
       <tbody>
-        {% for viewing in movie.viewing_set.all %}
-          <tr>
-            <td>{{viewing.view_date}}</td>
-            <td>{{viewing.get_personal_rating_display}}</td>
-          </tr>
+        {% for viewing in movie.viewings.all %}
+        <tr>
+          <td>{{viewing.view_date}}</td>
+          <td>{{viewing.get_personal_rating_display}}</td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
+    {% else%}
+    <div class="subsection-content">
+      <p>⚠️ {{movie.title}} has not been viewed!</p>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="actors">
+    <div class="subsection-title">
+      <h2>Actors</h2>
+      <img src="{% static 'images/filmaward.jpg' %}" alt="A film award" />
+      <img
+        src="{% static 'images/spilledpopcorn.jpg' %}"
+        alt="Spilled popcorn"
+      />
+      <img
+        src="{% static 'images/movie-theater.jpg' %}"
+        alt="A movie theater room"
+      />
+    </div>
+
+    <h3>{{ movie.title }}'s Actors</h3>
+    <div class="subsection-content">
+      {% if movie.actors.count %} {% for actor in movie.actors.all %}
+      <div class="actor-container">
+        <div
+          class="color-block {% if actor.gender == 'M' %}male{% elif actor.gender == 'F' %}female{% elif actor.gender == 'NB' %}non-binary{% else %}other{% endif %}"
+        ></div>
+        <a href="{% url 'actor_detail' actor.id %}">
+          <p>{{ actor.name }}</p>
+        </a>
+         <form
+          action="{% url 'remove_actor' movie.id actor.id %}"
+          method="post"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn submit">Remove Actor</button>
+        </form>
+      </div>
+      {% endfor %} {% else %}
+      <p class="no-actors">{{movie.title}} hasn't added an actors!</p>
+      {% endif %}
+    </div>
+
+    <h3>Available Actors</h3>
+    <div class="subsection-content">
+      {% if actors.count %} {% for actor in actors.all %}
+      <div class="actor-container">
+        <div
+          class="color-block {% if actor.gender == 'M' %}male{% elif actor.gender == 'F' %}female{% elif actor.gender == 'NB' %}non-binary{% else %}other{% endif %}"
+        ></div>
+        <p>{{ actor.name }}</p>
+        <form
+          action="{% url 'associate_actor' movie.id actor.id %}"
+          method="post"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn submit">Add Actor</button>
+        </form>
+      </div>
+      {% endfor %} {% else %}
+      <p class="all-actors">
+        {{movie.title}} already has all the available actors 🥳
+      </p>
+      {% endif %}
+    </div>
   </section>
 </div>
 
 {% endblock %}
-

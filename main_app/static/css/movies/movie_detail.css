@@ -1,3 +1,7 @@
+body {
+  background-color: rgb(216, 227, 248);
+}
+
 .movie-container {
   padding: 35px 30px;
   display: flex;
@@ -36,6 +40,7 @@
   flex-direction: column;
   padding-bottom: 20px;
   align-items: center;
+  
 }
 
 .subsection-title {
@@ -48,7 +53,7 @@
   margin: 0 8px;
 }
 
-.movie-container {
+.movie-container, .actor-container {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -61,20 +66,36 @@
   margin-right: 10px;
 }
 
-.unfed,
-.fed,
+.color-block.male {
+    background-color: blue;
+}
+
+.color-block.female {
+    background-color: pink;
+}
+
+.color-block.non-binary {
+    background-color: purple;
+}
+
+.color-block.other {
+    background-color: grey;
+}
+
+.unviewed,
+.viewed,
 .no-movies,
 .all-movies {
   margin: 0;
   font-weight: bold;
 }
 
-.unfed,
+.unviewed,
 .no-movies {
   color: var(--danger);
 }
 
-.fed,
+.viewed,
 .all-movies {
   color: var(--submit);
 }
@@ -112,6 +133,7 @@
   flex-direction: column;
   justify-content: center;
   margin-bottom: 20px;
+  background-color: rgb(255,255,255);
 }
 
 .subsection-title img {
@@ -124,13 +146,14 @@
 }
 
 .viewings h2,
-.movies h2 {
+.movies h2,
+.actors h2 {
   font-size: 3.2rem;
   margin: 0;
 }
 
 .viewings h3,
-.movies h3 {
+.movies h3, .actors h3 {
   font-size: var(--font-xl);
   margin: 10px 0;
 }
@@ -145,6 +168,10 @@
 .subsection-content select {
   margin-left: 5px;
   padding: 3px;
+}
+
+.actor-container button {
+  margin-left: 5px; 
 }
 
 .viewings table {

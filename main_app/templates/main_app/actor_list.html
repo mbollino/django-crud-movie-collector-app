@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/actors/actor_index.css' %}" />
+{% endblock %} {% block content %}
+
+<section class="page-header">
+  <h1>All Movie Actors</h1>
+  <img src="{% static 'images/filmstrip1.jpg' %}" alt="Filmstrip One" />
+  <img src="{% static 'images/filmstrip2.jpg' %}" alt="Filmstrip Two" />
+  <img src="{% static 'images/filmstrip3.jpg' %}" alt="Filmstrip Three" />
+  <img src="{% static 'images/filmstrip4.png' %}" alt="Filmstrip Four" />
+</section>
+
+<section class="card-container">
+    {% for actor in actors %}
+    <div class="card">
+      <div class="card-bg {% if actor.gender == 'M' %}male{% elif actor.gender == 'F' %}female{% elif actor.gender == 'NB' %}non-binary{% else %}other{% endif %}" ></div>
+      <a href="{% url 'actor_detail' actor.id %}">
+        <div class="card-content">
+          <h2>{{ actor.name }}</h2>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+</section>
+
+{% endblock %}

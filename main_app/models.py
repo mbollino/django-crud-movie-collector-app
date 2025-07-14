@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 PERSONAL_RATING = (
     (1, '1 Star'),
@@ -8,6 +9,28 @@ PERSONAL_RATING = (
     (4, '4 Stars'),
     (5, '5 Stars'),
 )
+
+GENDER_CHOICES = (
+    ('', 'Select a gender'),
+    ('M', 'Male'),
+    ('F', 'Female'),
+    ('NB', 'Non-Binary'),
+    ('O', 'Other'),    
+)
+
+class Actor(models.Model):
+    name = models.CharField(max_length=100)
+    gender = models.CharField(
+        max_length=2,
+        choices=GENDER_CHOICES,
+        default=GENDER_CHOICES[0][0]
+    )
+
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('actor_detail', kwargs={'pk': self.id})
 
 # Create your models here.
 class Movie(models.Model):
@@ -18,6 +41,9 @@ class Movie(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     description = models.TextField(blank=True)
 
+    actors = models.ManyToManyField(Actor, related_name='movies')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.title
     
@@ -27,12 +53,18 @@ class Movie(models.Model):
 class Viewing(models.Model):
     view_date = models.DateField()
     personal_rating = models.IntegerField(
-        max_length=1,
         choices=PERSONAL_RATING, 
         default=PERSONAL_RATING[0][0]
     )
 
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='viewings')
 
     def __str__(self):
         return f"{self.view_date} - {self.get_personal_rating_display()}"
+    
+    class Meta:
+        ordering = ['-view_date']
+
+    def related_actors(self):
+        return self.movie.actors.all()
+

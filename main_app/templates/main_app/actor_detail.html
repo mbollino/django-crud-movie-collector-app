@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/actors/actor_detail.css' %}" />
+{% endblock %} {% block content %}
+<div class="actor-detail">
+  <h1>{{ actor.name }}</h1>
+  <hr
+    class="line-detail {% if actor.gender == 'M' %}male{% elif actor.gender == 'F' %}female{% elif actor.gender == 'NB' %}non-binary{% else %}other{% endif %}"
+  />
+  <div class="page-header">
+    <img src="{% static 'images/filmstrip1.jpg' %}" alt="Filmstrip One" />
+    <img src="{% static 'images/filmstrip2.jpg' %}" alt="Filmstrip Two" />
+    <img src="{% static 'images/filmstrip3.jpg' %}" alt="Filmstrip Three" />
+    <img src="{% static 'images/filmstrip4.png' %}" alt="Filmstrip Four" />
+  </div>
+  <h2>Movies:</h2>
+  <ul>
+    {% if movies %} {% for movie in movies %}
+    <li>
+      <a href="{{ movie.get_absolute_url }}">{{ movie.title }}</a>
+
+      {% if movie.viewings.count %}
+      <ul>
+        {% for viewing in viewings %}
+        {% if viewing.movie == movie %}
+        <li>
+          Rating: {{ viewing.get_personal_rating_display }} ({{ viewing.view_date }})
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No ratings available for this movie.</p>
+      {% endif %}
+    </li>
+    {% endfor %} {% else %}
+    <li>No movies associated yet.</li>
+    {% endif %}
+  </ul>
+
+  <div class="button-container">
+    <a href="{% url 'actor_update' actor.id %}" class="btn warn">Edit</a>
+    <a href="{% url 'actor_delete' actor.id %}" class="btn danger">Delete</a>
+  </div>
+</div>
+{% endblock %}
