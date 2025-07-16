@@ -85,10 +85,17 @@ class ActorCreate(LoginRequiredMixin, CreateView):
     model = Actor
     fields = '__all__'
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 class ActorList(LoginRequiredMixin, ListView):
     model = Actor
     context_object_name = 'actors'
     template_name = 'actors/actor_index.html'
+
+    def get_queryset(self):
+        return Actor.objects.filter(user=self.request.user)
 
 class ActorDetail(LoginRequiredMixin, DetailView):
     model = Actor
